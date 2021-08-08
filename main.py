@@ -8,38 +8,27 @@ from pyecharts.charts import Sankey
 # MySQL的用户：root, 密码:147369, 端口：3306,数据库：test
 engine = create_engine('mysql+pymysql://root:root@localhost:3306/data')
 # 查询语句，选出employee表中的所有数据
-sql = 'select * from sheet0;'
+sql = 'select * from test1;'#123为数据库data里面的表名
 # read_sql_query的两个参数: sql语句， 数据库连接
 df = pd.read_sql_query(sql, engine)
 # 输出employee表的查询结果
 # print(df)
 # column_list = list(df.columns)
 # df1 = np.array(df)
-# for row in df1:
-#     lst = []
-#     lst.append(dict(zip(column_list, list(row))))
-#     str1 = json.dumps(lst, ensure_ascii=False)
-#     print(str1)
 
-df1 = df.groupby(['主叫号码','被叫号码'], as_index=False).sum()
-# df2 = df.groupby(['主叫号码','被叫号码'], as_index=False).len()
-# df1.set_index('主叫号码')
-print(type(df1.iloc[:,0]))
-# print(df2)
-#
-# print(df1.shape[1])
+#-------------话单用下面的代码------------------------
+# df1 = df.groupby(['主叫号码','被叫号码'], as_index=False).sum().sort_values("通话时长",ascending=False) #分组求和按通话时长降序排列
+#-------------资金分析用下面的代码--------------------
+df1 = df.groupby(['交易卡号','交易对手账卡号'], as_index=False).sum().sort_values("交易金额",ascending=False) #分组求和
+# print(df1)
+vales=df1.iloc[:,0].append(df1.iloc[0:50,1]).unique()#拼接两列唯一值并去重复，df1.iloc[0:10,1]控制对方前多少名数据
+
 nodes=[]
-vales=df1.iloc[:,0].append(df1.iloc[:,1]).unique()#拼接两列唯一值并去重复
-# print(v)
-# # for i in range(df1.shape[1]-1):#python里面的for函数范围。rangge（2）是0，1.unique()
-# vales = np.hstack((df1.iloc[:,0].unique(),df1.iloc[:,1].unique()))
-print(vales)
-
 for value in vales:
     dic={}
     dic['name']=value
     nodes.append(dic)
-print(nodes)
+# print(nodes)
 
 
 linkes=[]
@@ -52,9 +41,10 @@ for i in df1.values:
 
 # print(linkes)
 c = (
+
     Sankey()
     .add(
-        "sankey",
+        "数据分析图",
         nodes=nodes,
         links=linkes,
         pos_top="10%",
@@ -81,10 +71,10 @@ c = (
                 linestyle_opts=opts.LineStyleOpts(color="source", opacity=0.6),
             ),
         ],
-        linestyle_opt=opts.LineStyleOpts(curve=0.5),
+        linestyle_opt=opts.LineStyleOpts(curve=0.8),
     )
     .set_global_opts(
-        title_opts=opts.TitleOpts(title="Sankey-Level Settings"),
+        title_opts=opts.TitleOpts(title=""),
         tooltip_opts=opts.TooltipOpts(trigger="item", trigger_on="mousemove"),
     )
     .render("数据分析图.html")
