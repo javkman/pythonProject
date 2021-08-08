@@ -24,22 +24,21 @@ df = pd.read_sql_query(sql, engine)
 df1 = df.groupby(['主叫号码','被叫号码'], as_index=False).sum()
 # df2 = df.groupby(['主叫号码','被叫号码'], as_index=False).len()
 # df1.set_index('主叫号码')
-print(df1)
+# print(type(df1))
 # print(df2)
 #
 # print(df1.shape[1])
 nodes=[]
 
-# for i in range(df1.shape[1]-1):#python里面的for函数范围。rangge（2）是0，1
-# vales0=df1.iloc[:,0].unique()
-# vales1=df1.iloc[:,1].unique()
-values = pd.concat(df1.iloc[:,0],df1.iloc[:,1]).unique()
+# for i in range(df1.shape[1]-1):#python里面的for函数范围。rangge（2）是0，1.unique()
+vales = np.hstack((df1.iloc[:,0].unique(),df1.iloc[:,1].unique()))
+print(vales)
 
 for value in vales:
     dic={}
     dic['name']=value
     nodes.append(dic)
-print(nodes)
+# print(nodes)
 
 
 linkes=[]
@@ -50,7 +49,7 @@ for i in df1.values:
     dic['value']=i[2]
     linkes.append(dic)
 
-print(linkes)
+# print(linkes)
 c = (
     Sankey()
     .add(
