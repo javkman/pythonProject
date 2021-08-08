@@ -24,21 +24,22 @@ df = pd.read_sql_query(sql, engine)
 df1 = df.groupby(['主叫号码','被叫号码'], as_index=False).sum()
 # df2 = df.groupby(['主叫号码','被叫号码'], as_index=False).len()
 # df1.set_index('主叫号码')
-# print(type(df1))
+print(type(df1.iloc[:,0]))
 # print(df2)
 #
 # print(df1.shape[1])
 nodes=[]
-
-# for i in range(df1.shape[1]-1):#python里面的for函数范围。rangge（2）是0，1.unique()
-vales = np.hstack((df1.iloc[:,0].unique(),df1.iloc[:,1].unique()))
+vales=df1.iloc[:,0].append(df1.iloc[:,1]).unique()#拼接两列唯一值并去重复
+# print(v)
+# # for i in range(df1.shape[1]-1):#python里面的for函数范围。rangge（2）是0，1.unique()
+# vales = np.hstack((df1.iloc[:,0].unique(),df1.iloc[:,1].unique()))
 print(vales)
 
 for value in vales:
     dic={}
     dic['name']=value
     nodes.append(dic)
-# print(nodes)
+print(nodes)
 
 
 linkes=[]
