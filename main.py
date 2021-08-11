@@ -42,7 +42,7 @@ for i in df1.values:
 # print(linkes)
 c = (
 
-    Sankey()
+    Sankey(init_opts=opts.InitOpts(width="2200px", height="800px"))#设置图像大小
     .add(
         "数据分析图",
         nodes=nodes,
@@ -79,3 +79,4 @@ c = (
     )
     .render("数据分析图.html")
 )
+print(type(c))
